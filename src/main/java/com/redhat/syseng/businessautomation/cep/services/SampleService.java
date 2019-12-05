@@ -24,6 +24,8 @@ import javax.json.JsonObject;
 import com.redhat.syseng.businessautomation.cep.model.Result;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
+import io.vertx.core.cli.annotations.Name;
+import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.RuleUnitInstance;
 import org.kie.kogito.rules.impl.SessionData;
 import org.kie.kogito.rules.impl.SessionUnit;
@@ -36,11 +38,12 @@ public class SampleService {
 
     SessionData data = new SessionData();
     Result result = new Result();
+    RuleUnitInstance<SessionData> instance;
 
     @PostConstruct
     public void init() {
         data.add(result);
-        sessionUnit.evaluate(data);
+        instance = sessionUnit.createInstance(data);
     }
 
     public void run(CloudEvent<? extends Attributes, JsonObject> event) {
@@ -48,6 +51,7 @@ public class SampleService {
     }
 
     public String getValue() {
+        instance.fire();
         return result.getValue();
     }
 }
