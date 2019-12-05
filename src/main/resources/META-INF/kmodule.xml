@@ -1,0 +1,5 @@
+<kmodule xmlns="http://www.drools.org/xsd/kmodule">
+  <kbase name="simpleCEPKB" eventProcessingMode="stream" packages="com.redhat.syseng.businessautomation.cep.test">
+    <ksession name="simpleCEPKS" default="true"/>
+  </kbase>
+</kmodule>
