@@ -1,5 +1,5 @@
 <kmodule xmlns="http://www.drools.org/xsd/kmodule">
-  <kbase name="simpleCEPKB" eventProcessingMode="stream" packages="com.redhat.syseng.businessautomation.cep.test">
-    <ksession name="simpleCEPKS" default="true"/>
+  <kbase name="simpleCEPKB" eventProcessingMode="stream" packages="com.redhat.syseng.businessautomation.cep.test" scope="SessionScoped">
+    <ksession name="simpleCEPKS" default="true" scope="javax.enterprise.context.ApplicationScoped" type="stateful" clockType="pseudo"/>
   </kbase>
 </kmodule>

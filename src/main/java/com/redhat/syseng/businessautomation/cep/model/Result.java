@@ -23,24 +23,18 @@ public class Result {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
 
-    private String value1;
-    private String value2;
+    private String value;
 
-    public String getValue1() {
-        return value1;
+    public String getValue() {
+        if (value == null) {
+            return "keep trying, mate.";
+        }
+        return value;
     }
 
-    public void setValue1(String value) {
-        LOGGER.debug("Value1 set to {}", value);
-        this.value1 = value;
+    public void setValue(String value) {
+        LOGGER.debug("Value set to {}", value);
+        this.value = value;
     }
 
-    public String getValue2() {
-        return value2;
-    }
-
-    public void setValue2(String value) {
-        LOGGER.debug("Value2 set to {}", value);
-        this.value2 = value;
-    }
 }

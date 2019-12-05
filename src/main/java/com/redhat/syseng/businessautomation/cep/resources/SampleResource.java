@@ -22,6 +22,7 @@ import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -46,9 +47,13 @@ public class SampleResource {
     @POST
     public CompletionStage<Response> run(CloudEvent<? extends Attributes, JsonObject> event) {
         return CompletableFuture.supplyAsync(() -> {
-            String value = sampleService.run(event);
-            LOGGER.debug("Returned value {}", value);
+            sampleService.run(event);
             return Response.accepted().build();
         });
+    }
+
+    @GET
+    public CompletionStage<String> result() {
+        return CompletableFuture.supplyAsync(() -> sampleService.getValue());
     }
 }

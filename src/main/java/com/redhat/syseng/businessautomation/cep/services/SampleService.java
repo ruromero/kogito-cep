@@ -16,6 +16,7 @@
 
 package com.redhat.syseng.businessautomation.cep.services;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.json.JsonObject;
@@ -23,6 +24,7 @@ import javax.json.JsonObject;
 import com.redhat.syseng.businessautomation.cep.model.Result;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
+import org.kie.kogito.rules.RuleUnitInstance;
 import org.kie.kogito.rules.impl.SessionData;
 import org.kie.kogito.rules.impl.SessionUnit;
 
@@ -30,16 +32,22 @@ import org.kie.kogito.rules.impl.SessionUnit;
 public class SampleService {
 
     @Named("simpleCEPKS")
-    SessionUnit ruleUnit;
+    SessionUnit sessionUnit;
 
-    public String run(CloudEvent<? extends Attributes, JsonObject> event) {
-        Result result = new Result();
+    SessionData data = new SessionData();
+    Result result = new Result();
 
-        SessionData data = new SessionData();
-        data.add(event);
+    @PostConstruct
+    public void init() {
         data.add(result);
+        sessionUnit.evaluate(data);
+    }
 
-        ruleUnit.evaluate(data);
-        return result.getValue1();
+    public void run(CloudEvent<? extends Attributes, JsonObject> event) {
+        data.add(event);
+    }
+
+    public String getValue() {
+        return result.getValue();
     }
 }

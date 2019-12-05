@@ -11,8 +11,8 @@ rule R1
   when
     $r : Result()
     $e : CloudEvent()
-    Number(intValue > 2) from accumulate($c: CloudEvent(this != $e, this meets[10s] $e), count($c))
+    Number(intValue > 2) from accumulate($c: CloudEvent(this != $e, this meets[5s] $e), count($c))
   then
     System.out.println("We have two events" + " 5 seconds apart");
-    $r.setValue1("e2 was at least 5s after e1");
+    $r.setValue("e2 was at least 5s after e1");
 end
