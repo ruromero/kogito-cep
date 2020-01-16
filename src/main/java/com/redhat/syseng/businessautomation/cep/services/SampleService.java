@@ -18,40 +18,66 @@ package com.redhat.syseng.businessautomation.cep.services;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 
-import com.redhat.syseng.businessautomation.cep.model.Result;
+import com.redhat.syseng.businessautomation.cep.model.Event;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
-import io.vertx.core.cli.annotations.Name;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.EntryPoint;
+import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.kie.kogito.rules.RuleUnitInstance;
 import org.kie.kogito.rules.impl.SessionData;
 import org.kie.kogito.rules.impl.SessionUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class SampleService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SampleService.class);
+//    @Named("simpleCEPKS")
+//    SessionUnit sessionUnit;
+
+    KieSession kieSession;
+
+    @Inject
     @Named("simpleCEPKS")
-    SessionUnit sessionUnit;
+    SampleService(KieRuntimeBuilder runtimeBuilder) {
+        this.kieSession = runtimeBuilder.newKieSession();
+    }
 
     SessionData data = new SessionData();
-    Result result = new Result();
+
     RuleUnitInstance<SessionData> instance;
 
     @PostConstruct
-    public void init() {
-        data.add(result);
-        instance = sessionUnit.createInstance(data);
+    void init() {
+//        instance = sessionUnit.createInstance(data);
+//        KieServices kieServices = KieServices.Factory.get();
+//        session = kieServices.getKieClasspathContainer().newKieSession("simpleCEPKS");
+
     }
 
     public void run(CloudEvent<? extends Attributes, JsonObject> event) {
-        data.add(event);
+//        data.add(event);
+//        instance.fire();
+        kieSession.insert(event);
+        kieSession.fireAllRules();
+        LOGGER.debug("Facts in WM: {}",kieSession.getFactCount());
+    }
+
+    public void run(Event event) {
+//        data.add(event);
+//        instance.fire();
+        kieSession.insert(event);
+        kieSession.fireAllRules();
+        LOGGER.debug("Facts in WM: {}",kieSession.getFactCount());
     }
 
     public String getValue() {
-        instance.fire();
-        return result.getValue();
+        return null;
     }
 }

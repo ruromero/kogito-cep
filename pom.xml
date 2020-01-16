@@ -8,9 +8,9 @@
   <description>Generated project sample-cep</description>
 
   <properties>
-    <quarkus.version>1.0.1.Final</quarkus.version>
-    <kogito.version>0.6.0</kogito.version>
-    <cloudevents-api.version>1.1.0</cloudevents-api.version>
+    <quarkus.version>1.1.1.Final</quarkus.version>
+    <kogito.version>0.6.1</kogito.version>
+    <cloudevents-api.version>1.2.0</cloudevents-api.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>

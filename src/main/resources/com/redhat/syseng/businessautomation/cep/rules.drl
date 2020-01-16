@@ -1,18 +1,28 @@
-package com.redhat.syseng.businessautomation.cep.test
+package com.redhat.syseng.businessautomation.cep
 
 import io.cloudevents.CloudEvent
-import com.redhat.syseng.businessautomation.cep.model.Result
 
 declare CloudEvent
   @role( event )
 end
 
-rule R1
+// another way to detect multiple events, using sliding window instead of the comparison rule above
+// note that "length" refers to the last N number of event instances rather than considering their "time"
+rule detectBetweenTwoAndFiveEvents
   when
-    $r : Result()
-    $e : CloudEvent()
-    Number(intValue > 2) from accumulate($c: CloudEvent(this != $e, this meets[5s] $e), count($c))
+    $numberOfEvents : Number (intValue > 1) from accumulate(
+    CloudEvent() over window:length(5), count(1))
   then
-    System.out.println("We have two events" + " 5 seconds apart");
-    $r.setValue("e2 was at least 5s after e1");
-end
+    System.out.println("sliding detection of 2-5 events present in working memory, current count: " + $numberOfEvents);
+  end
+
+// note that since we're firing these so close together, you'll get 2 matches
+// see SampleService for a line to uncomment and force the clock ahead > 5 seconds so that the rule won't trigger
+rule detectTwoEventsWithinFiveSeconds
+  when
+    $c1 : CloudEvent()
+    CloudEvent(this != $c1, this meets[5s] $c1)
+    // IIRC, the equality check is redundant given the use of a temporal operator, but makes things easier to read
+  then
+   System.out.println("Some event started within 5 seconds of a different event duration ending");
+  end

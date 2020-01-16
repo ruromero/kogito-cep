@@ -29,6 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.redhat.syseng.businessautomation.cep.model.Event;
 import com.redhat.syseng.businessautomation.cep.services.SampleService;
 import io.cloudevents.Attributes;
 import io.cloudevents.CloudEvent;
@@ -45,7 +46,16 @@ public class SampleResource {
     SampleService sampleService;
 
     @POST
-    public CompletionStage<Response> run(CloudEvent<? extends Attributes, JsonObject> event) {
+    public CompletionStage<Response> runCloudEvent(CloudEvent<? extends Attributes, JsonObject> event) {
+        return CompletableFuture.supplyAsync(() -> {
+            sampleService.run(event);
+            return Response.accepted().build();
+        });
+    }
+
+    @POST
+    @Path("/events")
+    public CompletionStage<Response> runEvent(Event event) {
         return CompletableFuture.supplyAsync(() -> {
             sampleService.run(event);
             return Response.accepted().build();

@@ -16,24 +16,29 @@
 
 package com.redhat.syseng.businessautomation.cep.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
 
-public class Result {
+import javax.json.bind.annotation.JsonbDateFormat;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
+public class Event {
 
-    private String value;
+    @JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
+    Date executionTime;
+    Long id;
 
-    public String getValue() {
-        if (value == null) {
-            return "keep trying, mate.";
-        }
-        return value;
+    public Long getId() {
+        return id;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public Date getExecutionTime() {
+        return executionTime;
     }
 
+    public void setExecutionTime(Date executionTime) {
+        this.executionTime = executionTime;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
